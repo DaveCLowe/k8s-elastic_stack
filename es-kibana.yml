@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: es-kibana
+  namespace: elasticsearch
+  labels:
+    component: elasticsearch
+    role: kibana
+    app: kibana
+spec:
+  replicas: 1
+  template:
+    metadata:
+      namespace: elasticsearch
+      labels:
+        component: elasticsearch
+        role: kibana
+        app: kibana
+    spec:
+      containers:
+        - name: es-kibana
+          image: docker.elastic.co/kibana/kibana:7.0.0
+          env:
+            - name: CLUSTER_NAME
+              value: my-elastic-cluster
+            - name: ELASTICSEARCH_HOSTS
+              value: http://elasticsearch-loadbalancer:9200
+          resources:
+            limits:
+              cpu: 0.5
+          ports:
+            - containerPort: 5601
+              name: kibana
